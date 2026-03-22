@@ -14,25 +14,25 @@ The following diagram illustrates how the system bridges the gap between high-le
 ```mermaid
 graph TD
     subgraph "Natural Language Space"
-        [AgenticSystem] -- "instruction" --> [chat_with_agent]
-        [DGM_outer] -- "diagnose" --> [get_response_from_llm]
+        AS["AgenticSystem"] -- "instruction" --> CWA["chat_with_agent"]
+        DGM_O["DGM_outer"] -- "diagnose" --> GRFL["get_response_from_llm"]
     end
 
     subgraph "Abstraction Layer (llm_withtools.py / llm.py)"
-        [chat_with_agent] --> [get_response_withtools]
-        [get_response_withtools] -- "loop" --> [create_client]
-        [get_response_from_llm] --> [create_client]
+        CWA --> GRWT["get_response_withtools"]
+        GRWT -- "loop" --> CC["create_client"]
+        GRFL --> CC
     end
 
     subgraph "Code Entity Space (System Execution)"
-        [get_response_withtools] -- "exec" --> [tool_function]
-        [tool_function] -- "Bash" --> [BashSession]
-        [tool_function] -- "Edit" --> [editor_tool]
+        GRWT -- "exec" --> TF["tool_function"]
+        TF -- "Bash" --> BS["BashSession"]
+        TF -- "Edit" --> ET["editor_tool"]
     end
 
-    [create_client] -- "API Call" --> LLM_Provider["Anthropic / OpenAI / Bedrock"]
+    CC -- "API Call" --> LLM_Provider["Anthropic / OpenAI / Bedrock"]
 ```
-Sources: [coding_agent.py:153-170](), [llm_withtools.py:108-158](), [llm.py:44-98]()
+Sources: [coding_agent.py:153-170](https://github.com/hexo-ai/dgm/blob/main/coding_agent.py#L153-L170), [llm_withtools.py:108-158](https://github.com/hexo-ai/dgm/blob/main/llm_withtools.py#L108-L158), [llm.py:44-98](https://github.com/hexo-ai/dgm/blob/main/llm.py#L44-L98)
 
 ---
 
@@ -40,9 +40,9 @@ Sources: [coding_agent.py:153-170](), [llm_withtools.py:108-158](), [llm.py:44-9
 
 The abstraction layer provides a unified interface for interacting with various model providers. It handles the nuances of different API schemas (e.g., messages vs. prompts) and implements critical reliability features like exponential backoff and retry logic.
 
-*   **Model Support:** The system supports a wide range of models including Claude (Anthropic/Bedrock/Vertex), GPT-4 series (OpenAI), and DeepSeek [llm.py:44-98]().
-*   **Tool-Calling Orchestration:** The `get_response_withtools` function manages the iterative loop where a model emits a tool call, the system executes it, and the results are fed back to the model [llm_withtools.py:47-106]().
-*   **Configuration:** Global constants like `CLAUDE_MODEL` and `OPENAI_MODEL` define the default foundation models used throughout the evolutionary process [llm_withtools.py:13-14]().
+*   **Model Support:** The system supports a wide range of models including Claude (Anthropic/Bedrock/Vertex), GPT-4 series (OpenAI), and DeepSeek [llm.py:44-98](https://github.com/hexo-ai/dgm/blob/main/llm.py#L44-L98).
+*   **Tool-Calling Orchestration:** The `get_response_withtools` function manages the iterative loop where a model emits a tool call, the system executes it, and the results are fed back to the model [llm_withtools.py:47-106](https://github.com/hexo-ai/dgm/blob/main/llm_withtools.py#L47-L106).
+*   **Configuration:** Global constants like `CLAUDE_MODEL` and `OPENAI_MODEL` define the default foundation models used throughout the evolutionary process [llm_withtools.py:13-14](https://github.com/hexo-ai/dgm/blob/main/llm_withtools.py#L13-L14).
 
 For details, see [LLM Abstraction Layer (llm.py and llm_withtools.py)](03.1-llm-abstraction-layer.md).
 
@@ -75,10 +75,10 @@ classDiagram
     chat_with_agent --> BashSession : "invokes via tool_function"
     chat_with_agent --> Editor : "invokes via tool_function"
 ```
-Sources: [coding_agent.py:153-170](), [tools/bash.py:15-45](), [tools/edit.py:20-60]()
+Sources: [coding_agent.py:153-170](https://github.com/hexo-ai/dgm/blob/main/coding_agent.py#L153-L170), [tools/bash.py:15-45](https://github.com/hexo-ai/dgm/blob/main/tools/bash.py#L15-L45), [tools/edit.py:20-60](https://github.com/hexo-ai/dgm/blob/main/tools/edit.py#L20-L60)
 
-*   **Bash Tool:** Managed via `BashSession`, it handles persistent asynchronous subprocesses, allowing the agent to maintain state across multiple shell commands while using sentinels to detect command completion [tools/bash.py:15-45]().
-*   **Editor Tool:** Provides structured commands for file manipulation, including `view`, `create`, and `str_replace`. It includes safety checks for path validation and automatic output truncation for large files [tools/edit.py:20-60]().
+*   **Bash Tool:** Managed via `BashSession`, it handles persistent asynchronous subprocesses, allowing the agent to maintain state across multiple shell commands while using sentinels to detect command completion [tools/bash.py:15-45](https://github.com/hexo-ai/dgm/blob/main/tools/bash.py#L15-L45).
+*   **Editor Tool:** Provides structured commands for file manipulation, including `view`, `create`, and `str_replace`. It includes safety checks for path validation and automatic output truncation for large files [tools/edit.py:20-60](https://github.com/hexo-ai/dgm/blob/main/tools/edit.py#L20-L60).
 
 For details, see [Agent Tools — Bash and Editor (tools/)](03.2-agent-tools.md).
 
@@ -95,8 +95,8 @@ Prompts are treated as first-class code entities in DGM. The `prompts/` director
 | `tooluse_prompt.py` | Injects tool definitions for models without native tool-calling support. | `dynamic_tool_listing` |
 | `testrepo_prompt.py` | Guides the agent in extracting test commands from a repository. | `test_command_extraction` |
 
-Sources: [README.md:77-77](), [coding_agent.py:102-114]()
+Sources: [README.md:77-77](https://github.com/hexo-ai/dgm/blob/main/README.md#L77), [coding_agent.py:102-114](https://github.com/hexo-ai/dgm/blob/main/coding_agent.py#L102-L114)
 
-The `AgenticSystem` uses these templates to structure its initial instructions and its approach to identifying regression tests [coding_agent.py:102-114]().
+The `AgenticSystem` uses these templates to structure its initial instructions and its approach to identifying regression tests [coding_agent.py:102-114](https://github.com/hexo-ai/dgm/blob/main/coding_agent.py#L102-L114).
 
 For details, see [Prompt Templates (prompts/)](03.3-prompt-templates.md).
