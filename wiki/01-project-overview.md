@@ -1,8 +1,8 @@
 # Darwin Gödel Machine (DGM) — Project Overview
 
-The **Darwin Gödel Machine (DGM)** is a framework for open-ended evolution of self-improving agents. It implements a recursive self-improvement loop where an agent modifies its own source code to improve its performance on complex coding benchmarks. Unlike static agents, the DGM treats its own implementation as a mutable substrate, using evolutionary strategies to select and propagate successful architectural changes [README.md:14-15]().
+The **Darwin Gödel Machine (DGM)** is a framework for open-ended evolution of self-improving agents. It implements a recursive self-improvement loop where an agent modifies its own source code to improve its performance on complex coding benchmarks. Unlike static agents, the DGM treats its own implementation as a mutable substrate, using evolutionary strategies to select and propagate successful architectural changes [README.md:14-15](https://github.com/hexo-ai/dgm/blob/main/README.md#L14-L15).
 
-The system evaluates these self-modifications against two primary tracks: **SWE-bench** (software engineering tasks) and **Polyglot** (multi-language coding tasks) [README.md:75-76]().
+The system evaluates these self-modifications against two primary tracks: **SWE-bench** (software engineering tasks) and **Polyglot** (multi-language coding tasks) [README.md:75-76](https://github.com/hexo-ai/dgm/blob/main/README.md#L75-L76).
 
 ### High-Level Architecture
 
@@ -36,33 +36,33 @@ graph TD
         Step_Func["self_improve_step()"] --- SIS
     end
 ```
-**Sources:** [DGM_outer.py:1-20](), [self_improve_step.py:1-30](), [README.md:71-82]()
+**Sources:** [DGM_outer.py:1-20](https://github.com/hexo-ai/dgm/blob/main/DGM_outer.py#L1-L20), [self_improve_step.py:1-30](https://github.com/hexo-ai/dgm/blob/main/self_improve_step.py#L1-L30), [README.md:71-82](https://github.com/hexo-ai/dgm/blob/main/README.md#L71-L82)
 
 ### Key Concepts
 
-*   **Recursive Self-Improvement**: The agent is provided with its own source code and tools (like an editor and bash shell) to modify that code [README.md:14-15]().
+*   **Recursive Self-Improvement**: The agent is provided with its own source code and tools (like an editor and bash shell) to modify that code [README.md:14-15](https://github.com/hexo-ai/dgm/blob/main/README.md#L14-L15).
 *   **The Archive**: A collection of agent versions stored as git commits, tracked in `dgm_metadata.jsonl`.
-*   **Darwinian Selection**: The system uses performance metrics from benchmarks to decide which "mutations" (code changes) should serve as parents for the next generation [DGM_outer.py:1-10]().
-*   **The Coding Agent**: The core `AgenticSystem` class that defines how the model interacts with tools to solve tasks [coding_agent.py:1-20]().
+*   **Darwinian Selection**: The system uses performance metrics from benchmarks to decide which "mutations" (code changes) should serve as parents for the next generation [DGM_outer.py:1-10](https://github.com/hexo-ai/dgm/blob/main/DGM_outer.py#L1-L10).
+*   **The Coding Agent**: The core `AgenticSystem` class that defines how the model interacts with tools to solve tasks [coding_agent.py:1-20](https://github.com/hexo-ai/dgm/blob/main/coding_agent.py#L1-L20).
 
 ### Subsystem Overview
 
 #### 1. Evolutionary Orchestration
-The entry point of the system is `DGM_outer.py`. It manages the lifecycle of the experiment, including parallelizing evaluation runs and maintaining the metadata of all discovered agent variants [README.md:66-68]().
+The entry point of the system is `DGM_outer.py`. It manages the lifecycle of the experiment, including parallelizing evaluation runs and maintaining the metadata of all discovered agent variants [README.md:66-68](https://github.com/hexo-ai/dgm/blob/main/README.md#L66-L68).
 *   For details, see [DGM Outer Loop — Evolution Orchestration (DGM_outer.py)](02.1-dgm-outer-loop.md).
 
 #### 2. The Self-Improvement Pipeline
-The `self_improve_step.py` script handles the logic of taking a parent agent, identifying a "problem" or "opportunity for improvement" based on previous logs, and generating a new version of the code [README.md:34-34]().
+The `self_improve_step.py` script handles the logic of taking a parent agent, identifying a "problem" or "opportunity for improvement" based on previous logs, and generating a new version of the code [README.md:34-34](https://github.com/hexo-ai/dgm/blob/main/README.md#L34).
 *   For details, see [Self-Improvement Step — Diagnosis and Code Mutation (self_improve_step.py)](02.3-self-improvement-step.md).
 
 #### 3. Agent Capabilities and Tools
-The agent interacts with the world through a set of tools defined in the `tools/` directory, primarily a `BashSession` for command execution and an `Editor` for file manipulation [README.md:79-79]().
+The agent interacts with the world through a set of tools defined in the `tools/` directory, primarily a `BashSession` for command execution and an `Editor` for file manipulation [README.md:79-79](https://github.com/hexo-ai/dgm/blob/main/README.md#L79).
 *   For details, see [Agent Tools — Bash and Editor (tools/)](03.2-agent-tools.md).
 
 #### 4. Benchmarks
 The DGM validates its improvements using:
-*   **SWE-bench**: Real-world GitHub issues from popular Python repositories [README.md:52-58]().
-*   **Polyglot**: A multi-language benchmark testing the agent across different programming environments [README.md:60-63]().
+*   **SWE-bench**: Real-world GitHub issues from popular Python repositories [README.md:52-58](https://github.com/hexo-ai/dgm/blob/main/README.md#L52-L58).
+*   **Polyglot**: A multi-language benchmark testing the agent across different programming environments [README.md:60-63](https://github.com/hexo-ai/dgm/blob/main/README.md#L60-L63).
 *   For details, see [Benchmarks and Evaluation](04-benchmarks-and-evaluation.md).
 
 ### Code-to-Concept Mapping
@@ -89,7 +89,7 @@ graph LR
         Agent_Class --> Tool_Bash["tools/bash.py:BashSession"]
     end
 ```
-**Sources:** [coding_agent.py:1-50](), [self_improve_step.py:1-50](), [utils/eval_utils.py:1-20](), [tools/bash.py:1-30]()
+**Sources:** [coding_agent.py:1-50](https://github.com/hexo-ai/dgm/blob/main/coding_agent.py#L1-L50), [self_improve_step.py:1-50](https://github.com/hexo-ai/dgm/blob/main/self_improve_step.py#L1-L50), [utils/eval_utils.py:1-20](https://github.com/hexo-ai/dgm/blob/main/utils/eval_utils.py#L1-L20), [tools/bash.py:1-30](https://github.com/hexo-ai/dgm/blob/main/tools/bash.py#L1-L30)
 
 ### Child Pages
 For deeper technical dives, please refer to the following pages:
